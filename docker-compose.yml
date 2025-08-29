@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: MyRecipes
+      POSTGRES_PASSWORD: MyRecipes
+      POSTGRES_DB: MyRecipes
+    ports:
+      - '5432:5432'
