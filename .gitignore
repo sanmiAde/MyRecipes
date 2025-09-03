@@ -38,7 +38,7 @@ out/
 
 ### Kotlin ###
 .kotlin
-.env
+src/main/resources/.env
 src/main/kotlin/com/sanmiade/myrecipes/features/.DS_Store
 src/main/kotlin/com/sanmiade/myrecipes/.DS_Store
 src/main/kotlin/com/sanmiade/.DS_Store
