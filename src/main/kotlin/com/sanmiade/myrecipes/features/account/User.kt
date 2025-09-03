@@ -8,8 +8,11 @@ import jakarta.persistence.Id
 
 @Entity
 class User(
+    @Column(unique = true)
     val username: String,
-    val password: String
+    val password: String,
+    val email: String,
+    val roles: List<String>
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
