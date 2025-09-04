@@ -1,4 +1,4 @@
-package com.sanmiade.myrecipes.features.authentication.login.dto
+package com.sanmiade.myrecipes.features.authentication.dto
 
 data class AuthenticationResponse(
     val username: String,

@@ -1,4 +1,4 @@
-package com.sanmiade.myrecipes.features.authentication.login.dto
+package com.sanmiade.myrecipes.features.authentication.dto
 
 import jakarta.validation.constraints.NotBlank
 

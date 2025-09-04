@@ -1,11 +1,11 @@
-package com.sanmiade.myrecipes.features.authentication.login
+package com.sanmiade.myrecipes.features.authentication
 
 import com.auth0.jwt.exceptions.JWTCreationException
 import com.sanmiade.myrecipes.features.account.User
 import com.sanmiade.myrecipes.features.account.UserRepository
-import com.sanmiade.myrecipes.features.authentication.login.dto.AuthenticationResponse
-import com.sanmiade.myrecipes.features.authentication.login.dto.LoginRequest
-import com.sanmiade.myrecipes.features.authentication.login.dto.RegistrationRequest
+import com.sanmiade.myrecipes.features.authentication.dto.AuthenticationResponse
+import com.sanmiade.myrecipes.features.authentication.dto.LoginRequest
+import com.sanmiade.myrecipes.features.authentication.dto.RegistrationRequest
 import com.sanmiade.myrecipes.utils.security.JWTProcessor
 import com.sanmiade.myrecipes.utils.security.JWTProperties
 import com.sanmiade.myrecipes.utils.security.UserPrincipal
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component

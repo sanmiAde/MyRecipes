@@ -1,8 +1,8 @@
-package com.sanmiade.myrecipes.features.authentication.login
+package com.sanmiade.myrecipes.features.authentication
 
-import com.sanmiade.myrecipes.features.authentication.login.dto.AuthenticationResponse
-import com.sanmiade.myrecipes.features.authentication.login.dto.LoginRequest
-import com.sanmiade.myrecipes.features.authentication.login.dto.RegistrationRequest
+import com.sanmiade.myrecipes.features.authentication.dto.AuthenticationResponse
+import com.sanmiade.myrecipes.features.authentication.dto.LoginRequest
+import com.sanmiade.myrecipes.features.authentication.dto.RegistrationRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
