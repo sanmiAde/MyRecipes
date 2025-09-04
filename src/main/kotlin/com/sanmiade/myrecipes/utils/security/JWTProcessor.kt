@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.interfaces.DecodedJWT
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.util.Date
@@ -13,7 +14,7 @@ private const val AUTHORITIES_KEY = "roles"
 private const val USER_NAME_KEY = "username"
 
 @Component
-class JWTProcessor(private val jwtProperties: JWTProperties) {
+class JWTProcessor(private val jwtProperties: JWTProperties, val passwordEncoder: PasswordEncoder) {
 
     private val algorithm: Algorithm by lazy { Algorithm.HMAC256(jwtProperties.secretKey) }
 
@@ -57,7 +58,7 @@ class JWTProcessor(private val jwtProperties: JWTProperties) {
         return UserPrincipal(
             id = id,
             name = name,
-            authorities = decodedJWT.extractAuthorities()
+            authorities = decodedJWT.extractAuthorities(),
         )
     }
 

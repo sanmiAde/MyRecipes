@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails
 class UserPrincipal(
     val id: Long,
     val name: String,
+    val encodedPassword: String? = null,
     val authorities: List<SimpleGrantedAuthority>
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority?> {
@@ -14,7 +15,7 @@ class UserPrincipal(
     }
 
     override fun getPassword(): String? {
-        return null
+        return encodedPassword
     }
 
     override fun getUsername(): String {

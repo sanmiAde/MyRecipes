@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component
 class MyRecipesUserDetailService(val userRepository: UserRepository) : UserDetailsService {
     override fun loadUserByUsername(username: String?): UserPrincipal {
         if (username == null) throw UsernameNotFoundException("Username not found")
-        val user = userRepository.findByEmail(username) ?: throw UsernameNotFoundException("User not found")
+        val user = userRepository.findByUsername(username) ?: throw UsernameNotFoundException("User not found")
         val grantedAuthorities = user.roles.map { SimpleGrantedAuthority(it) }
-        return UserPrincipal(name = user.username, id = user.id!!, authorities = grantedAuthorities)
+        return UserPrincipal(name = user.username, id = user.id!!, authorities = grantedAuthorities, encodedPassword = user.password)
     }
 }
