@@ -33,14 +33,12 @@ class JWTProcessor(private val jwtProperties: JWTProperties) {
      */
     fun issueToken(
         userId: Long,
-        email: String,
         authorities: List<String>,
         expiresAtMillis: Long
     ): String {
         val expiration = Date.from(Instant.now().plusMillis(expiresAtMillis))
         return JWT.create()
             .withSubject(userId.toString())
-            .withClaim(USER_NAME_KEY, email)
             .withArrayClaim(AUTHORITIES_KEY, authorities.toTypedArray())
             .withExpiresAt(expiration)
             .sign(algorithm)

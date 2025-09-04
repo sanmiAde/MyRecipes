@@ -5,7 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class UserPrincipal(
-    val id: Long?,
+    val id: Long,
     val name: String,
     val authorities: List<SimpleGrantedAuthority>
 ) : UserDetails {
