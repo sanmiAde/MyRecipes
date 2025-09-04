@@ -40,6 +40,7 @@ class JWTProcessor(private val jwtProperties: JWTProperties, val passwordEncoder
         val expiration = Date.from(Instant.now().plusMillis(expiresAtMillis))
         return JWT.create()
             .withSubject(userId.toString())
+            .withClaim(USER_NAME_KEY, userId.toString())
             .withArrayClaim(AUTHORITIES_KEY, authorities.toTypedArray())
             .withExpiresAt(expiration)
             .sign(algorithm)
