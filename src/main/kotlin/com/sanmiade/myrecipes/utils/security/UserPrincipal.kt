@@ -8,10 +8,9 @@ class UserPrincipal(
     val id: Long,
     val name: String,
     val encodedPassword: String? = null,
-    val authorities: List<SimpleGrantedAuthority>
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority?> {
-        return this.authorities
+        return emptyList()
     }
 
     override fun getPassword(): String? {

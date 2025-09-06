@@ -32,7 +32,7 @@ class ProfileServiceImpl(
 class UserNotFoundException(message: String) : RuntimeException(message)
 
 // Mapping extension
-fun User.toResponse() = UserResponse(
+fun UserEntity.toResponse() = UserResponse(
     username = this.username,
     email = this.email
 )

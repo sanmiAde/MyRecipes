@@ -15,7 +15,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "users")
-class User(
+class UserEntity(
     @Column(nullable = false, unique = true)
     var username: String,
 

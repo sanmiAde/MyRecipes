@@ -28,6 +28,6 @@ class ProfileController(private val profileService: ProfileService) {
         @Validated @RequestBody profileRequest: ProfileRequest
     ): ResponseEntity<UserResponse> {
         val user = profileService.updateUser(user.id, profileRequest)
-
+        TODO()
     }
 }

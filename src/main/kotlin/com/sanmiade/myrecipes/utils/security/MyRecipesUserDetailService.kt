@@ -12,6 +12,6 @@ class MyRecipesUserDetailService(val userRepository: UserRepository) : UserDetai
         if (username == null) throw UsernameNotFoundException("Username not found")
         val user = userRepository.findByUsername(username) ?: throw UsernameNotFoundException("User not found")
         val grantedAuthorities = user.roles.map { SimpleGrantedAuthority(it) }
-        return UserPrincipal(name = user.username, id = user.id!!, authorities = grantedAuthorities, encodedPassword = user.password)
+        return UserPrincipal(name = user.username, id = user.id!!, encodedPassword = user.password)
     }
 }

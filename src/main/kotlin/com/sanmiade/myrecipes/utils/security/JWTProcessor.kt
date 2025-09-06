@@ -34,16 +34,16 @@ class JWTProcessor(private val jwtProperties: JWTProperties, val passwordEncoder
      */
     fun issueToken(
         userId: Long,
-        authorities: List<String>,
         expiresAtMillis: Long
-    ): String {
+    ): Pair<String, Date> {
         val expiration = Date.from(Instant.now().plusMillis(expiresAtMillis))
-        return JWT.create()
+        val token = JWT.create()
             .withSubject(userId.toString())
             .withClaim(USER_NAME_KEY, userId.toString())
-            .withArrayClaim(AUTHORITIES_KEY, authorities.toTypedArray())
             .withExpiresAt(expiration)
             .sign(algorithm)
+
+        return Pair(token, expiration)
     }
 
     /**
@@ -59,15 +59,6 @@ class JWTProcessor(private val jwtProperties: JWTProperties, val passwordEncoder
         return UserPrincipal(
             id = id,
             name = name,
-            authorities = decodedJWT.extractAuthorities(),
         )
-    }
-
-    /**
-     * Extract roles/authorities from JWT.
-     */
-    private fun DecodedJWT.extractAuthorities(): List<SimpleGrantedAuthority> {
-        val roles = this.getClaim(AUTHORITIES_KEY).asList(String::class.java) ?: emptyList()
-        return roles.map { SimpleGrantedAuthority(it) }
     }
 }
