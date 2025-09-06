@@ -1,6 +1,6 @@
 package com.sanmiade.myrecipes.utils.security
 
-import com.sanmiade.myrecipes.features.account.UserRepository
+import com.sanmiade.myrecipes.features.profile.UserRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException

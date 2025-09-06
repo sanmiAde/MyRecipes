@@ -1,4 +1,4 @@
-package com.sanmiade.myrecipes.features.account
+package com.sanmiade.myrecipes.features.profile
 
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
@@ -17,13 +17,13 @@ import jakarta.persistence.Table
 @Table(name = "users")
 class User(
     @Column(nullable = false, unique = true)
-    val username: String,
+    var username: String,
 
     @Column(nullable = false)
-    val password: String,
+    var password: String,
 
     @Column(nullable = false)
-    val email: String,
+    var email: String,
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -31,7 +31,7 @@ class User(
         joinColumns = [JoinColumn(name = "user_id")]
     )
     @Column(name = "role")
-    val roles: List<String> = listOf()
+    var roles: List<String> = listOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")

@@ -1,8 +1,8 @@
 package com.sanmiade.myrecipes.features.authentication
 
 import com.auth0.jwt.exceptions.JWTCreationException
-import com.sanmiade.myrecipes.features.account.User
-import com.sanmiade.myrecipes.features.account.UserRepository
+import com.sanmiade.myrecipes.features.profile.User
+import com.sanmiade.myrecipes.features.profile.UserRepository
 import com.sanmiade.myrecipes.features.authentication.dto.AuthenticationResponse
 import com.sanmiade.myrecipes.features.authentication.dto.LoginRequest
 import com.sanmiade.myrecipes.features.authentication.dto.RegistrationRequest
