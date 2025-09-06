@@ -66,6 +66,11 @@ class AuthenticationServiceImpl(
 
     // learn how exceptions is propergated and handled in kotlin spring boot
     override fun register(registrationRequest: RegistrationRequest): AuthenticationResponse {
+        if (!registrationRequest.validatePasswordsMatch()) throw ResponseStatusException(
+            HttpStatus.CONFLICT,
+            "Passwords do not match"
+        )
+
         if (userRepository.existsByUsername(registrationRequest.username)) {
             throw ResponseStatusException(HttpStatus.CONFLICT, "User already exists")
         }
