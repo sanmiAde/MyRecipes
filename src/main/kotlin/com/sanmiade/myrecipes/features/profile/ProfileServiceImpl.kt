@@ -1,5 +1,6 @@
 package com.sanmiade.myrecipes.features.profile
 
+import com.sanmiade.myrecipes.utils.UserNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,14 +25,10 @@ class ProfileServiceImpl(
             email = profileRequest.email
         }
 
-        return user.toResponse() // no need to call save explicitly in a @Transactional method
+        return user.toResponse()
     }
 }
 
-// Custom exception
-class UserNotFoundException(message: String) : RuntimeException(message)
-
-// Mapping extension
 fun UserEntity.toResponse() = UserResponse(
     username = this.username,
     email = this.email

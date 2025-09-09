@@ -5,3 +5,4 @@ class UserAlreadyExistsException(username: String) : RuntimeException("User '$us
 class PasswordMismatchException : RuntimeException("Passwords do not match")
 class InvalidRefreshTokenException : RuntimeException("Invalid refresh token")
 class ExpiredRefreshTokenException : RuntimeException("Refresh token expired")
+class UserNotFoundException(message: String) : RuntimeException(message)

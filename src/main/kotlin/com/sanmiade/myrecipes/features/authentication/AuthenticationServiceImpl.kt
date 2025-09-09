@@ -92,10 +92,8 @@ class AuthenticationServiceImpl(
         )
         userRepository.save(userEntity)
 
-        // Reuse login logic to authenticate and generate tokens
         return login(LoginRequest(registrationRequest.username, registrationRequest.password))
     }
-    // ... existing code ...
 
     @Transactional
     override fun logout(refreshToken: String) {
@@ -108,19 +106,16 @@ class AuthenticationServiceImpl(
         val refreshTokenEntity = refreshTokenRepository.findByToken(refreshToken)
             ?: throw InvalidRefreshTokenException()
 
-        // Enforce server-side expiry
         if (refreshTokenEntity.expiryDate.before(Date())) {
             refreshTokenRepository.delete(refreshTokenEntity)
             throw ExpiredRefreshTokenException()
         }
 
-        // Rotate tokens
         val accessToken = issueToken(refreshTokenEntity.userId, jwtProperties.accessTokenExpiry).first
         val (newRefreshToken, newExpireAt) = issueToken(refreshTokenEntity.userId, jwtProperties.refreshTokenExpiry)
 
         refreshTokenEntity.token = newRefreshToken
         refreshTokenEntity.expiryDate = newExpireAt
-        // JPA flushes on commit
 
         return TokenPair(
             accessToken = accessToken,

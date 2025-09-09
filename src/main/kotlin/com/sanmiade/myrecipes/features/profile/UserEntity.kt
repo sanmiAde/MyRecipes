@@ -1,5 +1,6 @@
 package com.sanmiade.myrecipes.features.profile
 
+import com.sanmiade.myrecipes.features.recipes.RecipeEntity
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
 import jakarta.persistence.ElementCollection
@@ -9,6 +10,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 
@@ -31,7 +33,9 @@ class UserEntity(
         joinColumns = [JoinColumn(name = "user_id")]
     )
     @Column(name = "role")
-    var roles: List<String> = listOf()
+    var roles: List<String> = listOf(),
+    @OneToMany(mappedBy = "userEntity", cascade = [jakarta.persistence.CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    var recipes: MutableList<RecipeEntity> = mutableListOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_gen")
