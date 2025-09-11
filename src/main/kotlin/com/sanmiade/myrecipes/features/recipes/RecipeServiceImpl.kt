@@ -7,6 +7,7 @@ import com.sanmiade.myrecipes.utils.UserNotFoundException
 import com.sanmiade.myrecipes.utils.fromSpringPage
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 
 @Component
@@ -29,9 +30,23 @@ class RecipeServiceImpl(private val recipeRepository: RecipeRepository, private 
         return recipeRepository.save<RecipeEntity>(recipeEntity).toResponse()
     }
 
-    override fun getRecipesByUserId(userId: Long, status: Status, pageable: PageRequest): PagedResponse<RecipeResponse> {
-       val springPage = recipeRepository.findRecipeEntitiesByUserEntityIdAndStatus(userEntityId = userId, status = status, pageable = pageable).map { it.toResponse() }
-       return fromSpringPage(springPage)
+    override fun getRecipesByUserId(
+        userId: Long,
+        status: Status,
+        pageable: PageRequest
+    ): PagedResponse<RecipeResponse> {
+        val springPage = recipeRepository.findRecipeEntitiesByUserEntityIdAndStatus(
+            userEntityId = userId,
+            status = status,
+            pageable = pageable
+        ).map { it.toResponse() }
+        return fromSpringPage(springPage)
+    }
+
+    override fun getRecipesBy(cuisine: String?, status: Status?, pageable: Pageable): PagedResponse<RecipeResponse> {
+        val springPage =
+            recipeRepository.findRecipeEntitiesByCuisineIgnoreCaseAndStatus(cuisine, status, pageable).map { it.toResponse() }
+        return fromSpringPage(springPage)
     }
 
 }

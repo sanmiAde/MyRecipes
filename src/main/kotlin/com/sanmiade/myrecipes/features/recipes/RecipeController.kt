@@ -3,6 +3,7 @@ package com.sanmiade.myrecipes.features.recipes
 import com.sanmiade.myrecipes.utils.PagedResponse
 import com.sanmiade.myrecipes.utils.security.UserPrincipal
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -36,6 +37,19 @@ class RecipeController(private val recipeService: RecipeService) {
     ): ResponseEntity<PagedResponse<RecipeResponse>?> {
         val pageable = PageRequest.of(page, size)
         val recipes = recipeService.getRecipesByUserId(user.id, status, pageable)
+
+        return ResponseEntity.ok(recipes)
+    }
+
+    @GetMapping("/search")
+    fun getRecipesByCuisine(
+        @RequestParam(required = false) cuisine: String?,
+        @RequestParam(required = false) status: Status?,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): ResponseEntity<PagedResponse<RecipeResponse>?> {
+        val pageable = PageRequest.of(page, size)
+        val recipes = recipeService.getRecipesBy(cuisine, status, pageable)
 
         return ResponseEntity.ok(recipes)
     }

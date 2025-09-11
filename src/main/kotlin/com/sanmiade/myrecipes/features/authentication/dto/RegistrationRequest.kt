@@ -13,7 +13,5 @@ data class RegistrationRequest(
     @field:Email(message = "Email is mandatory")
     val email: String
 ) {
-
     fun validatePasswordsMatch() = password != confirmPassword
-
 }
