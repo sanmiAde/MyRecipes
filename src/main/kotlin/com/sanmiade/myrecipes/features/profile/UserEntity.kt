@@ -20,13 +20,10 @@ import jakarta.persistence.Table
 class UserEntity(
     @Column(nullable = false, unique = true)
     var username: String,
-
     @Column(nullable = false)
     var password: String,
-
     @Column(nullable = false)
     var email: String,
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
         name = "user_roles",
