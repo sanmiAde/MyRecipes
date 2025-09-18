@@ -22,9 +22,10 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.util.Date
 
-@Component
+@Service
 class AuthenticationServiceImpl(
     private val userRepository: UserRepository,
     private val authenticationManager: AuthenticationManager,

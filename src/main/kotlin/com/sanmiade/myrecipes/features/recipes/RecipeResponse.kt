@@ -12,7 +12,8 @@ data class RecipeResponse(
     val ingredients: String,
     val directions: String,
     val cuisine: String,
-    val status: Status
+    val status: Status,
+    val rating: Double
 ) : Serializable {
 
 }

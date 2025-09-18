@@ -9,10 +9,14 @@ import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
-class RecipeServiceImpl(private val recipeRepository: RecipeRepository, private val userRepository: UserRepository) :
-    RecipeService {
+@Service
+class RecipeServiceImpl(
+    private val recipeRepository: RecipeRepository,
+    private val userRepository: UserRepository,
+    private val ratingRepository: RatingRepository
+) : RecipeService {
 
     @Transactional
     override fun createRecipe(recipeReq: RecipeReq, userId: Long): RecipeResponse {
@@ -30,6 +34,7 @@ class RecipeServiceImpl(private val recipeRepository: RecipeRepository, private 
         return recipeRepository.save<RecipeEntity>(recipeEntity).toResponse()
     }
 
+    @Transactional
     override fun getRecipesByUserId(
         userId: Long,
         status: Status,
@@ -43,10 +48,30 @@ class RecipeServiceImpl(private val recipeRepository: RecipeRepository, private 
         return fromSpringPage(springPage)
     }
 
+    @Transactional
     override fun getRecipesBy(cuisine: String?, status: Status?, pageable: Pageable): PagedResponse<RecipeResponse> {
         val springPage =
-            recipeRepository.findRecipeEntitiesByCuisineIgnoreCaseAndStatus(cuisine, status, pageable).map { it.toResponse() }
+            recipeRepository.findRecipeEntitiesByCuisineIgnoreCaseAndStatus(cuisine, status, pageable)
+                .map { it.toResponse() }
         return fromSpringPage(springPage)
+    }
+
+    @Transactional
+    override fun rateRecipe(
+        recipeId: Long,
+        id: Long,
+        ratingReq: RatingReq
+    ): RecipeResponse {
+        val recipe = recipeRepository.findById(recipeId)
+            .orElseThrow { IllegalArgumentException("Recipe with id=$recipeId not found") }
+
+        val rating = RatingEntity(
+            data = ratingReq.rating,
+            recipeEntity = recipe
+        )
+        recipe.ratingEntity.add(rating)
+        ratingRepository.save(rating)
+        return recipe.toResponse()
     }
 
 }
