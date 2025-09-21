@@ -2,7 +2,10 @@ package com.sanmiade.myrecipes.features.recipes
 
 import com.sanmiade.myrecipes.features.profile.UserEntity
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -22,13 +25,18 @@ class RecipeEntity(
     @JoinColumn(name = "user_entity_id")
     var userEntity: UserEntity,
     var title: String,
+    @Column(columnDefinition = "TEXT")
     var description: String,
+    @Column(columnDefinition = "TEXT")
     var ingredients: String,
+    @Column(columnDefinition = "TEXT")
     var directions: String,
+    @Column(length = 100)
     var cuisine: String,
+    @Enumerated(EnumType.STRING)
     var status: Status = Status.DRAFT,
     @OneToMany(mappedBy = "recipeEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var ratingEntity: MutableList<RatingEntity> = mutableListOf()
+    var ratings: MutableList<RatingEntity> = mutableListOf()
 )
 
 enum class Status(val value: String) {
@@ -44,8 +52,10 @@ fun RecipeEntity.toResponse(): RecipeResponse =
         directions = this.directions,
         cuisine = this.cuisine,
         status = this.status,
-        rating = this.ratingEntity
+        rating = this.ratings
             .mapNotNull { it.data.takeIf { r -> r != Rating.NONE }?.value?.toDouble() }
-            .average()
-            .let { round(it * 10) / 10 }
+            .let { values ->
+                val avg = if (values.isNotEmpty()) values.average() else 0.0
+                round(avg * 10) / 10
+            }
     )

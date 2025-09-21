@@ -69,7 +69,7 @@ class RecipeServiceImpl(
             data = ratingReq.rating,
             recipeEntity = recipe
         )
-        recipe.ratingEntity.add(rating)
+        recipe.ratings.add(rating)
         ratingRepository.save(rating)
         return recipe.toResponse()
     }

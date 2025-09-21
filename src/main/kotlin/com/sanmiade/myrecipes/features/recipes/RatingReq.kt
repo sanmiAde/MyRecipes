@@ -1,6 +1,6 @@
 package com.sanmiade.myrecipes.features.recipes
 
-import org.jetbrains.annotations.NotNull
+import jakarta.validation.constraints.NotNull
 
 
 data class RatingReq(@field:NotNull val rating: Rating)
