@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JWTAuthenticationFilter,
+    private val jwtProcessor: JWTProcessor
 ) {
 
     @Bean
@@ -44,4 +45,8 @@ class SecurityConfig(
     fun authenticationManager(authConfig: org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration): AuthenticationManager {
         return authConfig.authenticationManager
     }
+
+    @Bean
+    fun jwtAuthenticationFilter(): JWTAuthenticationFilter =
+        JWTAuthenticationFilter(jwtProcessor)
 }

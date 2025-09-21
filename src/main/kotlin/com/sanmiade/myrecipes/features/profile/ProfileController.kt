@@ -18,8 +18,8 @@ class ProfileController(private val profileService: ProfileService) {
 
     @GetMapping
     fun getAccount(@AuthenticationPrincipal user: UserPrincipal): ResponseEntity<UserResponse> {
-        val user = profileService.getUserById(user.id)
-        return ResponseEntity.status(HttpStatus.OK).body(user)
+        val userResponse = profileService.getUserById(user.id)
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse)
     }
 
     @PutMapping
@@ -27,7 +27,7 @@ class ProfileController(private val profileService: ProfileService) {
         @AuthenticationPrincipal user: UserPrincipal,
         @Validated @RequestBody profileRequest: ProfileRequest
     ): ResponseEntity<UserResponse> {
-        val user = profileService.updateUser(user.id, profileRequest)
-        return ResponseEntity.status(HttpStatus.OK).body(user)
+        val userResponse = profileService.updateUser(user.id, profileRequest)
+        return ResponseEntity.status(HttpStatus.OK).body(userResponse)
     }
 }
