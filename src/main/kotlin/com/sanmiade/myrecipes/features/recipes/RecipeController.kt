@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import java.net.URI
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -26,7 +27,8 @@ class RecipeController(private val recipeService: RecipeService) {
         @AuthenticationPrincipal user: UserPrincipal
     ): ResponseEntity<RecipeResponse> {
         val response = recipeService.createRecipe(recipeReq, user.id)
-        return ResponseEntity.status(HttpStatus.CREATED).body(response)
+        val location = URI.create("/api/v1/recipes/${response.id}")
+        return ResponseEntity.created(location).body(response)
     }
 
     @GetMapping("/mine")

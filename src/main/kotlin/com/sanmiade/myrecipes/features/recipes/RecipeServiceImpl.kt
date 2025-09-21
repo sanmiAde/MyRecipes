@@ -51,7 +51,7 @@ class RecipeServiceImpl(
     @Transactional
     override fun getRecipesBy(cuisine: String?, status: Status?, pageable: Pageable): PagedResponse<RecipeResponse> {
         val springPage =
-            recipeRepository.findRecipeEntitiesByCuisineIgnoreCaseAndStatus(cuisine, status, pageable)
+            recipeRepository.searchByCuisineAndStatus(cuisine, status, pageable)
                 .map { it.toResponse() }
         return fromSpringPage(springPage)
     }

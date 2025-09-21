@@ -1,5 +1,6 @@
 package com.sanmiade.myrecipes.utils
 
+import jakarta.persistence.EntityNotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -64,6 +65,28 @@ class GlobalExceptionHandler {
             path = request.requestURI
         )
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgument(ex: IllegalArgumentException, request: HttpServletRequest): ResponseEntity<ApiError> {
+        val body = ApiError(
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = HttpStatus.BAD_REQUEST.reasonPhrase,
+            message = ex.message ?: "Bad Request",
+            path = request.requestURI
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body)
+    }
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    fun handleEntityNotFound(ex: EntityNotFoundException, request: HttpServletRequest): ResponseEntity<ApiError> {
+        val body = ApiError(
+            status = HttpStatus.NOT_FOUND.value(),
+            error = HttpStatus.NOT_FOUND.reasonPhrase,
+            message = ex.message ?: "Not Found",
+            path = request.requestURI
+        )
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body)
     }
 
     @ExceptionHandler(Exception::class)
