@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.server.ResponseStatusException
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -87,6 +88,20 @@ class GlobalExceptionHandler {
             path = request.requestURI
         )
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body)
+    }
+
+    @ExceptionHandler(ResponseStatusException::class)
+    fun handleResponseStatus(ex: ResponseStatusException, request: HttpServletRequest): ResponseEntity<ApiError> {
+        val statusCode = ex.statusCode
+        val httpStatus = (statusCode as? HttpStatus) ?: HttpStatus.resolve(statusCode.value())
+        val reason = ex.reason ?: httpStatus?.reasonPhrase ?: "Error"
+        val body = ApiError(
+            status = statusCode.value(),
+            error = httpStatus?.reasonPhrase ?: "Error",
+            message = reason,
+            path = request.requestURI
+        )
+        return ResponseEntity.status(statusCode).body(body)
     }
 
     @ExceptionHandler(Exception::class)
