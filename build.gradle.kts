@@ -47,6 +47,7 @@ dependencies {
     testImplementation("org.instancio:instancio-junit:3.7.0")
     testImplementation("io.mockk:mockk:1.13.7")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation(kotlin("test"))
 }
 
 kotlin {
