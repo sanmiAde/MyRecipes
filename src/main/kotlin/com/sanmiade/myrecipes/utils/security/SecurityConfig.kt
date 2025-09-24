@@ -3,50 +3,48 @@ package com.sanmiade.myrecipes.utils.security
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
-@EnableMethodSecurity
 class SecurityConfig(
-    private val jwtAuthenticationFilter: JWTAuthenticationFilter,
-    private val jwtProcessor: JWTProcessor
 ) {
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity, authManager: AuthenticationManager): SecurityFilterChain {
-        http {
-            csrf { disable() }
-            cors { disable() }
-            sessionManagement { sessionCreationPolicy = SessionCreationPolicy.STATELESS }
-            formLogin { disable() }
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
-            authorizeHttpRequests {
-                authorize("/api/v1/auth/**", permitAll)
-                authorize("/", permitAll)
-                authorize(anyRequest, authenticated)
+    @Bean
+    fun authenticationManager(authConfiguration: AuthenticationConfiguration): AuthenticationManager =
+        authConfiguration.authenticationManager
+
+    @Bean
+    fun jwtAuthenticationFilter(jwtProcessor: JWTProcessor): JWTAuthenticationFilter {
+        return JWTAuthenticationFilter(jwtProcessor)
+    }
+
+    @Bean
+    fun securityFilterChain(
+        http: HttpSecurity,
+        jwtAuthenticationFilter: JWTAuthenticationFilter
+    ): SecurityFilterChain {
+        http
+            .csrf { it.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .authorizeHttpRequests {
+                it.requestMatchers(
+                    "/auth/**",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**"
+                ).permitAll()
+                    .anyRequest().authenticated()
             }
-
-            authenticationManager = authManager
-
-            // Add JWT filter before UsernamePasswordAuthenticationFilter
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
-        }
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }
-
-    // Modern way to get AuthenticationManager
-    @Bean
-    fun authenticationManager(authConfig: org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration): AuthenticationManager {
-        return authConfig.authenticationManager
-    }
-
-    @Bean
-    fun jwtAuthenticationFilter(): JWTAuthenticationFilter =
-        JWTAuthenticationFilter(jwtProcessor)
 }

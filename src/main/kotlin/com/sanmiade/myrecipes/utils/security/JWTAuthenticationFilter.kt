@@ -14,48 +14,31 @@ class JWTAuthenticationFilter(
     private val jwtProcessor: JWTProcessor
 ) : OncePerRequestFilter() {
 
-    private val excludedPaths = setOf(
-        "/api/v1/auth/register",
-        "/api/v1/auth/login",
-        "/api/v1/auth/refresh"
-    )
-
-    override fun shouldNotFilter(request: HttpServletRequest) =
-        excludedPaths.any { request.requestURI.startsWith(it) }
-
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        try {
-            if (SecurityContextHolder.getContext().authentication == null) {
-                val principal = extractAndDecodeJWT(request)
+        val header = request.getHeader("Authorization")
+
+        // Only validate if a Bearer token is present
+        if (header != null && header.startsWith("Bearer ")) {
+            try {
+                val token = header.removePrefix("Bearer ").trim()
+                val principal = jwtProcessor.toUserPrincipal(jwtProcessor.decodeJWT(token))
                 val authToken = UsernamePasswordAuthenticationToken(principal, null, principal.authorities)
                 SecurityContextHolder.getContext().authentication = authToken
-            }
-            filterChain.doFilter(request, response)
-        } catch (e: BadCredentialsException) {
-            response.apply {
-                status = HttpServletResponse.SC_UNAUTHORIZED
-                contentType = "application/json"
-                writer.write(
-                    """{"message":"${e.message}","timestamp":${System.currentTimeMillis()}}"""
-                )
+            } catch (ex: Exception) {
+                response.apply {
+                    status = HttpServletResponse.SC_UNAUTHORIZED
+                    contentType = "application/json"
+                    writer.write("""{"message":"Token verification failed","timestamp":${System.currentTimeMillis()}}""")
+                    return
+                }
             }
         }
-    }
 
-    private fun extractAndDecodeJWT(request: HttpServletRequest): UserPrincipal {
-        val header = request.getHeader("Authorization")
-            ?: throw BadCredentialsException("Authorization header missing")
-        if (!header.startsWith("Bearer ")) throw BadCredentialsException("Malformed token")
-
-        val token = header.removePrefix("Bearer ").trim()
-        return try {
-            jwtProcessor.toUserPrincipal(jwtProcessor.decodeJWT(token))
-        } catch (ex: Exception) {
-            throw BadCredentialsException("Token verification failed")
-        }
+        // If no token, just continue the filter chain
+        filterChain.doFilter(request, response)
     }
 }
